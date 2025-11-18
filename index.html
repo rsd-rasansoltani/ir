@@ -1,250 +1,305 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="zxx">
+<!doctype html>
+<html lang="fa" dir="rtl">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>MK STUDIO</title>
-    <link rel="shortcut icon" href="logo.png" />
-    <link rel="stylesheet" href="css/plugins.css" />
-    <link rel="stylesheet" href="css/style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>پنل حسابداری — MKstudio</title>
+<style>
+:root{--bg:#0b1220;--card:#0f1722;--muted:#9aa6b2;--accent:#5eead4;--accent2:#60a5fa;--glass:rgba(255,255,255,0.03);--danger:#ff6b6b}
+*{box-sizing:border-box;font-family:Tahoma,Arial,Helvetica,sans-serif}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#071029 0%, #081428 100%);color:#e6eef8}
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;padding:20px;background:linear-gradient(180deg,#071226 0%, #081428 100%);border-right:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column}
+.brand h1{margin:0;color:var(--accent);font-size:20px}
+.brand p{margin:2px 0 12px;color:var(--muted);font-size:13px}
+.admin-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.admin-info{display:flex;align-items:center;gap:8px}
+.admin-info #adminName{color:#fff;font-weight:700}
+.menu{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.menu button{background:transparent;border:none;color:var(--muted);padding:12px;text-align:right;border-radius:8px;cursor:pointer}
+.menu button.active{background:linear-gradient(90deg, rgba(96,165,250,0.12), rgba(94,234,212,0.06));color:var(--accent2);font-weight:700}
+.sidebar-footer{margin-top:auto}
+.logout{width:100%;padding:10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);cursor:pointer}
+
+/* main */
+.main{flex:1;padding:18px;display:flex;flex-direction:column;min-height:100vh}
+.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.clock{background:var(--glass);padding:8px 12px;border-radius:10px;text-align:right}
+.clock #time{font-weight:700}
+.clock #jalali{color:var(--muted);font-size:13px}
+.search-area input{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;min-width:220px}
+
+/* tabs & cards */
+.tab{display:none}
+.tab.show{display:block}
+.dash-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+.summary{grid-column:span 4}
+.chartcard{grid-column:span 8;min-height:260px}
+.notes{grid-column:span 4;display:flex;flex-direction:column;gap:8px}
+.notes textarea{min-height:120px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
+.notes .notes-actions{display:flex;gap:8px;justify-content:flex-end}
+.metrics{display:flex;gap:8px;justify-content:space-between;margin-top:10px}
+.m{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;flex:1;text-align:center}
+.m-title{color:var(--muted);font-size:13px}
+.m-value{font-weight:800;font-size:20px;color:var(--accent)}
+
+/* forms and tables */
+.form-inline{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.form-inline input,.form-inline select{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
+.form-inline button{padding:10px;border-radius:8px;border:none;background:var(--accent2);color:#021;cursor:pointer}
+.data-table{width:100%;border-collapse:collapse;margin-top:12px;background:transparent;border-radius:8px;overflow:hidden}
+.data-table th,.data-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:center;color:var(--muted)}
+
+/* invoice */
+.invoice-panel{display:flex;gap:12px}
+.invoice-panel .left{flex:2}
+.invoice-panel .right{width:260px}
+
+/* responsive */
+@media (max-width:900px){
+  .sidebar{display:none}
+  .dash-grid{grid-template-columns:repeat(1,1fr)}
+  .chartcard{min-height:200px}
+  .notes{order:2}
+}
+.footer{margin-top:12px;color:var(--muted);text-align:center;padding:8px}
+</style>
 </head>
 <body>
-    <!-- Preloader -->
-    <div id="preloader"></div>
-    <!-- Progress scroll totop -->
-    <div class="progress-wrap cursor-pointer">
-        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
-        </svg>
-    </div>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <!-- Logo -->
-        <div class="logo-wrapper valign">
-            <div class="logo">
-                <a href="index.html"> 
-                    <img src="logo.png" class="logo-img" alt="" style="border-radius: 5%;">
-                    <h2>ام کی استدیو<span>طراحی با</span></h2>
-                </a>
-            </div>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="icon-bar"><i class="ti-line-double"></i></span> </button>
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link active" href="#" data-scroll-nav="0">خانه</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-scroll-nav="1">درباره ما</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-scroll-nav="2">پروژه ها</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-scroll-nav="3">سرویس ها</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-scroll-nav="5">تماس با ما</a></li>
-            </ul>
-        </div>
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="brand"><h1>MKstudio</h1><p class="role">پنل</p></div>
+    <div class="admin-row"><div class="admin-info"><div id="adminName">MKstudio16</div></div></div>
+    <nav class="menu">
+      <button data-tab="dashboard" class="active">خانه</button>
+      <button data-tab="products">محصولات</button>
+      <button data-tab="customers">مشتریان</button>
+      <button data-tab="invoice">فاکتور</button>
+      <button data-tab="lottery">قرعه‌کشی / گزارش</button>
     </nav>
-    <!-- Slider -->
-    <header id="home" class="header slider-fade" data-scroll-index="0">
-        <div class="owl-carousel owl-theme">
-            <!-- The opacity on the image is made with "data-overlay-dark="number". You can change it using the numbers 0-9. -->
-            <div class="text-right item bg-img" data-overlay-dark="3" data-background="112.jpeg">
-                <div class="v-middle caption mt-30">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-7 offset-md-5">
-                                <div class="o-hidden">
-                                    <h1>M K S T U D I O 1 6 . I R</h1>
-                                    <P>یک شرکت جدید به منظور درست کردن و طراحی کردن <br> با مدیریت یک تیم عالی</P>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Corner -->
-        <div class="hero-corner"></div>
-        <div class="hero-corner3"></div>
-        <!-- Left Panel -->
+    <div class="sidebar-footer"><button id="clearStorage" class="logout">پاک‌کردن داده‌ها</button></div>
+  </aside>
 
+  <main class="main">
+    <header class="topbar">
+      <div class="clock"><div id="time">--:--:--</div><div id="jalali">--</div></div>
+      <div class="search-area"><input id="globalSearch" placeholder="جستجو..." /></div>
     </header>
-    <!-- Content -->
-    <div class="content-wrapper">
-        <!-- Lines -->
-        <section class="content-lines-wrapper">
-            <div class="content-lines-inner">
-                <div class="content-lines"></div>
-            </div>
-        </section>
-        <!-- About -->
-        <section id="about" class="about section-padding" data-scroll-index="1">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 mb-30 animate-box" data-animate-effect="fadeInUp">
-                        <h2 class="section-title">درباره <span>ام کی</span></h2>
-                        <p>.راسان دیزاین یک شرکت غیر تعاونی به منظور طراحی برای شما است که بهترین وبسایت را با کمترین قیمت بازار درست میکند  
-                        <p>راسان دیزاین در سال 1403 در دی ماه تاسیس شد. راسان دیزاین در محدوده شهرستان سقز قرار دارد و بهترین وبسایت های شهرستان به دست ان ساخته شده است .</p>
-                    </div>
-                    <div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
-                        <div class="about-img">
-                            <div class="img"> <img src="ribin.jpeg" class="img-fluid" alt="" id="uuj"> </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Projects -->
-        <section id="projects" class="projects section-padding" data-scroll-index="2">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="section-title"><span>پروژه های</span> ما</h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="position-re o-hidden"> <img src="nasr.jpg" alt="nea"> </div>
-                                <div class="con">
-                                    <h6><a href="project.html">ناصر دارائی</a></h6>
-                                    <h5><a href="project.html">وکیل پایه یک دادگستری</a></h5>
-                                    <div class="line"></div> <a href="###"><i class="ti-arrow-right"></i></a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="position-re o-hidden"> <img src="6.jpg" alt="nea"> </div>
-                                <div class="con">
-                                    <h6><a href="project.html">ثقل بتن سقز</a></h6>
-                                    <h5><a href="project.html">با کیفیت ترین بتن شهرستان<a></h5>
-                                    <div class="line"></div> <a href="###"><i class="ti-arrow-right"></i></a>
-                                </div>
-                            </div>
-                             <div class="item">
-                                <div class="position-re o-hidden"> <img src="gaj.jpg" alt="nea"> </div>
-                                <div class="con">
-                                    <h6><a href="project.html">اندیشمندان جوان </a></h6>
-                                    <h5><a href="project.html">یکی از بهترین مدارس و نمایندگی گاج سقز</a></h5>
-                                    <div class="line"></div> <a href="###"><i class="ti-arrow-right"></i></a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="position-re o-hidden"> <img src="down.jpg" alt="nea"> </div>
-                                <div class="con">
-                                    <h6><a href="https://rasandesign.github.io/AI">Rasan-AI</a></h6>
-                                    <h5><a href="https://rasandesign.github.io/AI">از بهترین هوش مصنوعی ها زبانی</a></h5>
-                                    <div class="line"></div> <a href="https://rasandesign.github.io/AI"><i class="ti-arrow-right"></i></a>
-                                </div>
-                            </div> 
-                            <div class="item">
-                                <div class="position-re o-hidden"> <img src="coiny.jpg" alt="nea"> </div>
-                                <div class="con">
-                                    <h6><a href="https://rasandesign.github.io/game">Coiny rasan</a></h6>
-                                    <h5><a href="https://rasandesign.github.io/game">جانشین ربات همستر و ناتکوین</a></h5>
-                                    <div class="line"></div> <a href="https://rasandesign.github.io/game"><i class="ti-arrow-right"></i></a>
-                                </div>
-                            </div> 
-                            <div class="item">
-                                <div class="position-re o-hidden"> <img src="rsd.jpg" alt="nea"> </div>
-                                <div class="con">
-                                    <h6><a href="https://rasandesign.github.io/rsd">RSD456</a></h6>
-                                    <h5><a href="https://rasandesign.github.io/rsd">از جدید ترین مرورگر های جهان</a></h5>
-                                    <div class="line"></div> <a href="https://rasandesign.github.io/rsd"><i class="ti-arrow-right"></i></a>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Services -->
-        <section id="services" class="services section-padding" data-scroll-index="3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="section-title">دیگر <span>خدمات</span></h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="item">
-                                <img src="img/icons/icon-1.png" alt="">
-                                <h5>طراحی وبسایت html:5 دست نویس(معرفی)</h5>
-                                <div class="line"></div>
-                                <p>طراحی وبسایت معرفی بین قیمت 3 میلیون تا 10 میلیون است که بستگی بر اطلاعات شما دارد تا قیمت گذاری  شود </p>
-                                <div class="numb">01</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="item">
-                             <img src="img/icons/icon-2.png" alt="">
-                             <h5>طراحی وبسایت html:5 دست نویس(فروشگاهی)</h5>
-                                <div class="line"></div>
-                                <p>طراحی وبسایت فروشگاهی بین قیمت 30 میلیون تا 100 میلیون است که بستگی بر اطلاعات شما دارد تا قیمت گذاری شود </p>
-                                <div class="numb">02</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="item">
-                                <img src="img/icons/icon-3.png" alt="">
-                                <h5>طراحی وبسایت html:5 دست نویس(ثبت نام)</h5>
-                                <div class="line"></div>
-                                <p>طراحی وبسایت ثبت نام بین قیمت 8 میلیون تا 17.5 میلیون است که بستگی بر اطلاعات شما قیمت گذاری می شود </p>
-                                <div class="numb">03</div>
-                            </a>
-                        </div>
-                    </div>
-                                    <div class="row">
-                    <div class="col-md-4">
-                        <div class="item">
-                                <img src="img/icons/icon-1.png" alt="">
-                                <h5>انواع برنامه ها (حساب داری و ...)</h5>
-                                <div class="line"></div>
-                                <p>طراحی انواع برنامه ها بین قیمت 3 میلیون تا 30 میلیون است که بستگی بر اطلاعات و نوع برنامه شما دارد تا قیمت گذاری  شود </p>
-                                <div class="numb">04</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Contact -->
 
-        <!-- Promo video - Testiominals -->
-        <!-- Clients -->
-        <!-- Footer -->
-        <section id="contact" class="section-padding" data-scroll-index="5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 animate-box" data-animate-effect="fadeInUp">
-                        <h2 class="section-title">تماس با  <span>ما</span></h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 mb-30 animate-box" data-animate-effect="fadeInUp">
-                        <h3>اطلاعات تماس و ادرس و ایمیل راسان دیزاین</h3>
-                    </div>
-                    <div class="col-md-4 mb-30 animate-box" data-animate-effect="fadeInUp">
-                        <p><b>تلفن :</b>09379970045</p>
-                        <p><b>ایمیل :</b> Mkstudio@4BA.ir</p>
-                        <p><b>آدرس :</b> ایران-کردستان-سقز-بلوار انقلاب </p>
-                        <p><b>گذارش مشکلات و پیگیری :</b> @mohammadMK16 در تلگرام</p>
-                    </div>
-<h6 style="font-size: 10px;">تمام اطلاعات این تارنما متعلق به هلدینگ فوربا میباشد و کامل کامل محفوظ است</h6>
-                </div>
-            </div>
-        </section>
-    </div>
-    <!-- jQuery -->
-    <script src="js/jquery-3.5.1.min.js"></script>
-    <script src="js/jquery-migrate-3.0.0.min.js"></script>
-    <script src="js/modernizr-2.6.2.min.js"></script>
-    <script src="js/pace.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/scrollIt.min.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.stellar.min.js"></script>
-    <script src="js/jquery.magnific-popup.js"></script>
-    <script src="js/YouTubePopUp.js"></script>
-    <script src="js/custom.js"></script>
+    <section id="dashboard" class="tab show">
+      <div class="dash-grid">
+        <div class="card summary"><h3>خلاصه</h3>
+          <div class="metrics">
+            <div class="m"><div class="m-title">فروش</div><div id="total-sales" class="m-value">0</div></div>
+            <div class="m"><div class="m-title">هزینه</div><div id="total-cost" class="m-value">0</div></div>
+            <div class="m"><div class="m-title">سود</div><div id="total-profit" class="m-value">0</div></div>
+          </div></div>
+
+        <div class="card notes"><h3>یادداشت‌ها</h3>
+          <textarea id="notesArea" placeholder="یادداشت جدید..."></textarea>
+          <div class="notes-actions"><button id="saveNote">ذخیره</button><button id="clearNote">پاک کردن</button></div>
+        </div>
+
+        <div class="card chartcard"><h3>نمودار فروش</h3><canvas id="salesChart"></canvas></div>
+      </div>
+    </section>
+
+    <section id="products" class="tab">
+      <h2>محصولات</h2>
+      <form id="productForm" class="form-inline">
+        <input id="p_name" placeholder="نام محصول" required />
+        <select id="p_country">
+          <option value="IR">ایران</option><option value="US">آمریکا</option><option value="CN">چین</option><option value="TR">ترکیه</option><option value="DE">آلمان</option>
+        </select>
+        <input id="p_cost" type="number" placeholder="قیمت خرید" min="0" required />
+        <input id="p_price" type="number" placeholder="قیمت فروش" min="0" required />
+        <button type="submit">افزودن</button>
+      </form>
+      <input id="productSearch" placeholder="جستجو محصول..." />
+      <table class="data-table" id="productsTable"><thead><tr><th>کد</th><th>نام</th><th>کشور</th><th>خرید</th><th>فروش</th><th>سود</th></tr></thead><tbody></tbody></table>
+    </section>
+
+    <section id="customers" class="tab">
+      <h2>مشتریان</h2>
+      <form id="customerForm" class="form-inline">
+        <input id="c_name" placeholder="نام و نام خانوادگی" required />
+        <input id="c_mobile" placeholder="شماره موبایل" required />
+        <input id="c_dob" type="date" />
+        <button type="submit">افزودن</button>
+      </form>
+      <div class="customer-actions"><input id="customerSearch" placeholder="جستجو مشتری..." /><button id="drawBtn">قرعه‌کشی</button></div>
+      <table class="data-table" id="customersTable"><thead><tr><th>کد اشتراک</th><th>نام</th><th>موبایل</th><th>تاریخ تولد</th></tr></thead><tbody></tbody></table>
+      <div id="winnerBox" class="hidden card"></div>
+    </section>
+
+    <section id="invoice" class="tab">
+      <h2>فاکتور</h2>
+      <div class="invoice-panel">
+        <div class="left">
+          <label>مشتری</label>
+          <select id="invoiceCustomer"><option value="">-- انتخاب مشتری --</option></select>
+          <label>محصول</label>
+          <select id="invoiceProduct"><option value="">-- انتخاب محصول --</option></select>
+          <input id="invoiceQty" type="number" min="1" value="1" />
+          <button id="addInvoiceItem">افزودن</button>
+          <table class="data-table" id="invoiceItems"><thead><tr><th>محصول</th><th>تعداد</th><th>قیمت واحد</th><th>مبلغ</th><th></th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="right card">
+          <h3>خلاصه</h3>
+          <p>جمع: <span id="invoiceSubtotal">0</span></p>
+          <p>تخفیف: <span id="invoiceDiscount">0</span></p>
+          <p>نهایی: <span id="invoiceTotal">0</span></p>
+          <button id="saveInvoice">ذخیره فاکتور</button>
+        </div>
+      </div>
+      <div id="invoicesList" class="card"><h3>فاکتورهای ذخیره‌شده</h3><ul id="invoicesUl"></ul></div>
+    </section>
+
+    <section id="lottery" class="tab">
+      <h2>قرعه‌کشی و گزارش</h2>
+      <button id="showAllSales">نمایش تمام فاکتورها</button>
+      <div id="reports"></div>
+    </section>
+
+    <footer class="footer">© MKstudio</footer>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// state
+let state = {
+  products: JSON.parse(localStorage.getItem('products')||'[]'),
+  customers: JSON.parse(localStorage.getItem('customers')||'[]'),
+  invoices: JSON.parse(localStorage.getItem('invoices')||'[]'),
+  notes: localStorage.getItem('mk_notes')||''
+};
+
+// Clock & Jalali
+function toJalaali(gy,gm,gd){
+  var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];var gy2=gy-1600;var gm2=gm-1;var gd2=gd-1;
+  var g_day_no=365*gy2+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400);
+  g_day_no += gd2 + g_d_m[gm2];
+  if(gm2>1 && ((gy%4==0 && gy%100!=0) || (gy%400==0))) g_day_no++;
+  var j_day_no = g_day_no-79; var j_np = Math.floor(j_day_no/12053);
+  j_day_no = j_day_no % 12053; var jy = 979 + 33*j_np + 4*Math.floor(j_day_no/1461);
+  j_day_no %= 1461;
+  if(j_day_no >= 366){ jy += Math.floor((j_day_no-1)/365); j_day_no = (j_day_no-1)%365; }
+  var jm=0,jd=0; var jalali_month_days=[31,31,31,31,31,31,30,30,30,30,30,29];
+  for(var i=0;i<11;i++){ if(j_day_no >= jalali_month_days[i]) j_day_no -= jalali_month_days[i]; else { jm = i+1; jd = j_day_no+1; break; } }
+  if(jm==0){ jm=12; jd=j_day_no+1; } return [jy,jm,jd];
+}
+function updateClock(){ const now=new Date(); document.getElementById('time').innerText = now.toLocaleTimeString('fa-IR'); const [jy,jm,jd] = toJalaali(now.getFullYear(), now.getMonth()+1, now.getDate()); document.getElementById('jalali').innerText = `${jd}/${jm}/${jy}`; }
+setInterval(updateClock,1000); updateClock();
+
+// Utilities
+function uid(prefix='X'){ return prefix + Math.random().toString(36).slice(2,9).toUpperCase(); }
+function saveState(){ localStorage.setItem('products', JSON.stringify(state.products)); localStorage.setItem('customers', JSON.stringify(state.customers)); localStorage.setItem('invoices', JSON.stringify(state.invoices)); localStorage.setItem('mk_notes', state.notes||''); updateDashboard(); }
+
+// Tabs
+document.querySelectorAll('.menu button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('show'));
+    document.getElementById(btn.dataset.tab).classList.add('show');
+    if(btn.dataset.tab === 'dashboard') updateDashboard();
+  });
+});
+
+// Products
+document.getElementById('productForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const name = document.getElementById('p_name').value.trim();
+  const country = document.getElementById('p_country').value;
+  const cost = parseFloat(document.getElementById('p_cost').value)||0;
+  const price = parseFloat(document.getElementById('p_price').value)||0;
+  const countryCount = state.products.filter(p=>p.country===country).length + 1;
+  const code = country + '-' + String(countryCount).padStart(4,'0');
+  const id = uid('P');
+  const profit = price - cost;
+  state.products.push({id,code,name,country,cost,price,profit});
+  saveState(); document.getElementById('productForm').reset(); refreshProducts();
+});
+document.getElementById('productSearch').addEventListener('input', refreshProducts);
+function refreshProducts(){ const q = document.getElementById('productSearch').value.trim().toLowerCase(); const tbody = document.querySelector('#productsTable tbody'); tbody.innerHTML=''; state.products.filter(p=>p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q)).forEach(p=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${p.code}</td><td>${p.name}</td><td>${p.country}</td><td>${p.cost}</td><td>${p.price}</td><td>${(p.profit).toFixed(2)}</td>`; tbody.appendChild(tr); }); populateSelects(); }
+
+// Customers
+document.getElementById('customerForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const name = document.getElementById('c_name').value.trim();
+  const mobile = document.getElementById('c_mobile').value.trim();
+  const dob = document.getElementById('c_dob').value || '';
+  const code = generateSubscriptionCode(name,mobile);
+  state.customers.push({id:uid('C'),code,name,mobile,dob});
+  saveState(); document.getElementById('customerForm').reset(); refreshCustomers();
+});
+function generateSubscriptionCode(name,mobile){
+  const initials = name.split(' ').map(s=>s[0]||'').join('').slice(0,3).toUpperCase();
+  const digits = mobile.replace(/\D/g,'').slice(-4) || Math.floor(Math.random()*9000)+1000;
+  return `S-${initials}-${digits}-${Date.now().toString().slice(-4)}`;
+}
+document.getElementById('customerSearch').addEventListener('input', refreshCustomers);
+function refreshCustomers(){ const q = document.getElementById('customerSearch').value.trim().toLowerCase(); const tbody = document.querySelector('#customersTable tbody'); tbody.innerHTML=''; state.customers.filter(c=> c.name.toLowerCase().includes(q) || c.mobile.includes(q) || c.code.toLowerCase().includes(q)).forEach(c=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${c.code}</td><td>${c.name}</td><td>${c.mobile}</td><td>${c.dob}</td>`; tbody.appendChild(tr); }); }
+
+// Lottery
+document.getElementById('drawBtn').addEventListener('click', ()=>{
+  if(state.customers.length===0){ alert('هیچ مشتری ذخیره‌شده‌ای وجود ندارد'); return; }
+  const idx = Math.floor(Math.random()*state.customers.length);
+  const winner = state.customers[idx];
+  const box = document.getElementById('winnerBox'); box.classList.remove('hidden'); box.innerHTML = `<h3>برنده: ${winner.name}</h3><p>کد: ${winner.code}</p><p>موبایل: ${winner.mobile}</p>`;
+});
+
+// Invoice
+function populateSelects(){ const customerSel = document.getElementById('invoiceCustomer'); const productSel = document.getElementById('invoiceProduct'); customerSel.innerHTML = '<option value="">-- انتخاب مشتری --</option>'; productSel.innerHTML = '<option value="">-- انتخاب محصول --</option>'; state.customers.forEach(c=> customerSel.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.name} (${c.code})</option>`)); state.products.forEach(p=> productSel.insertAdjacentHTML('beforeend', `<option value="${p.id}">${p.name} — ${p.code} — ${p.price}</option>`)); }
+document.getElementById('addInvoiceItem').addEventListener('click', ()=>{ const pid = document.getElementById('invoiceProduct').value; const qty = parseInt(document.getElementById('invoiceQty').value)||1; if(!pid){ alert('ابتدا محصول را انتخاب کنید'); return; } const product = state.products.find(p=>p.id===pid); const tbody = document.querySelector('#invoiceItems tbody'); const tr = document.createElement('tr'); tr.dataset.pid = pid; tr.innerHTML = `<td>${product.name}</td><td>${qty}</td><td>${product.price}</td><td>${(product.price*qty).toFixed(2)}</td><td><button class="removeItem">حذف</button></td>`; tbody.appendChild(tr); updateInvoiceSummary(); });
+document.querySelector('#invoiceItems tbody').addEventListener('click', e=>{ if(e.target.classList.contains('removeItem')){ e.target.closest('tr').remove(); updateInvoiceSummary(); } });
+function updateInvoiceSummary(){ const rows = Array.from(document.querySelectorAll('#invoiceItems tbody tr')); let subtotal=0; rows.forEach(r=>{ const qty = parseInt(r.children[1].innerText) || 0; const price = parseFloat(r.children[2].innerText) || 0; subtotal += qty*price; }); let discount=0; const totalQty = rows.reduce((s,r)=>s + (parseInt(r.children[1].innerText)||0),0); if(totalQty>=10) discount=0.10*subtotal; else if(totalQty>=5) discount=0.05*subtotal; const total = subtotal-discount; document.getElementById('invoiceSubtotal').innerText = subtotal.toFixed(2); document.getElementById('invoiceDiscount').innerText = discount.toFixed(2); document.getElementById('invoiceTotal').innerText = total.toFixed(2); }
+document.getElementById('saveInvoice').addEventListener('click', ()=>{ const custId = document.getElementById('invoiceCustomer').value; if(!custId){ alert('مشتری انتخاب نشده'); return; } const rows = Array.from(document.querySelectorAll('#invoiceItems tbody tr')); if(rows.length===0){ alert('هیچ آیتمی وجود ندارد'); return; } const items = rows.map(r=>{ const pid = r.dataset.pid; const p = state.products.find(x=>x.id===pid); const qty = parseInt(r.children[1].innerText)||1; return {pid,pname:p.name,price:p.price,qty,amount: p.price*qty}; }); const subtotal = parseFloat(document.getElementById('invoiceSubtotal').innerText)||0; const discount = parseFloat(document.getElementById('invoiceDiscount').innerText)||0; const total = parseFloat(document.getElementById('invoiceTotal').innerText)||0; const inv = {id:uid('I'),customer:custId,customerName:state.customers.find(c=>c.id===custId).name,items,subtotal,discount,total,date:new Date().toISOString()}; state.invoices.push(inv); saveState(); document.querySelector('#invoiceItems tbody').innerHTML=''; refreshInvoices(); alert('فاکتور ذخیره شد'); });
+function refreshInvoices(){ const ul = document.getElementById('invoicesUl'); ul.innerHTML=''; state.invoices.forEach(inv=>{ const li = document.createElement('li'); li.innerHTML = `<strong>${inv.customerName}</strong> — ${inv.date.split('T')[0]} — مبلغ: ${inv.total.toFixed(2)} <button data-id="${inv.id}" class="viewInv">نمایش</button>`; ul.appendChild(li); }); updateDashboard(); }
+document.getElementById('invoicesUl').addEventListener('click', e=>{ if(e.target.classList.contains('viewInv')){ const id = e.target.dataset.id; const inv = state.invoices.find(i=>i.id===id); alert(JSON.stringify(inv, null, 2)); } });
+document.getElementById('showAllSales').addEventListener('click', ()=>{ const reports = document.getElementById('reports'); reports.innerHTML = '<h3>فاکتور‌ها</h3>'; state.invoices.forEach(inv=>{ reports.innerHTML += `<div class="card"><strong>${inv.customerName}</strong> — ${inv.date.split('T')[0]} — ${inv.total.toFixed(2)}</div>`; }); });
+
+// Notes
+document.getElementById('notesArea').value = state.notes || '';
+document.getElementById('saveNote').addEventListener('click', ()=>{ state.notes = document.getElementById('notesArea').value || ''; saveState(); alert('یادداشت ذخیره شد'); });
+document.getElementById('clearNote').addEventListener('click', ()=>{ if(confirm('پاک شود؟')){ state.notes=''; document.getElementById('notesArea').value=''; saveState(); } });
+
+// Dashboard chart
+let salesChart;
+function updateDashboard(){
+  const totalSales = state.invoices.reduce((s,i)=>s + (i.total||0),0);
+  const totalCost = state.invoices.reduce((s,i)=>{ let c=0; i.items.forEach(it=>{ const p = state.products.find(x=>x.id===it.pid); if(p) c += (p.cost||0)*it.qty; }); return s + c; },0);
+  const profit = totalSales - totalCost;
+  document.getElementById('total-sales').innerText = totalSales.toFixed(2);
+  document.getElementById('total-cost').innerText = totalCost.toFixed(2);
+  document.getElementById('total-profit').innerText = profit.toFixed(2);
+
+  const grouped = {}; state.invoices.forEach(inv=>{ const d = inv.date.split('T')[0]; grouped[d] = (grouped[d]||0) + inv.total; });
+  const labels = Object.keys(grouped).sort(); const data = labels.map(l=>grouped[l]);
+  if(salesChart){ salesChart.data.labels = labels; salesChart.data.datasets[0].data = data; salesChart.update(); }
+  else { const ctx = document.getElementById('salesChart').getContext('2d'); salesChart = new Chart(ctx, {type:'bar', data:{labels, datasets:[{label:'فروش', data}]}, options:{responsive:true, plugins:{legend:{display:false}}}}); }
+}
+
+// Helpers & init
+function refreshAll(){ refreshProducts(); refreshCustomers(); refreshInvoices(); updateDashboard(); }
+function refreshProducts(){ const q = document.getElementById('productSearch').value.trim().toLowerCase(); const tbody = document.querySelector('#productsTable tbody'); tbody.innerHTML=''; state.products.filter(p=>p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q)).forEach(p=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${p.code}</td><td>${p.name}</td><td>${p.country}</td><td>${p.cost}</td><td>${p.price}</td><td>${(p.profit).toFixed(2)}</td>`; tbody.appendChild(tr); }); populateSelects(); }
+function refreshCustomers(){ const q = document.getElementById('customerSearch').value.trim().toLowerCase(); const tbody = document.querySelector('#customersTable tbody'); tbody.innerHTML=''; state.customers.filter(c=> c.name.toLowerCase().includes(q) || c.mobile.includes(q) || c.code.toLowerCase().includes(q)).forEach(c=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${c.code}</td><td>${c.name}</td><td>${c.mobile}</td><td>${c.dob}</td>`; tbody.appendChild(tr); }); }
+function populateSelects(){ const customerSel = document.getElementById('invoiceCustomer'); const productSel = document.getElementById('invoiceProduct'); customerSel.innerHTML = '<option value="">-- انتخاب مشتری --</option>'; productSel.innerHTML = '<option value="">-- انتخاب محصول --</option>'; state.customers.forEach(c=> customerSel.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.name} (${c.code})</option>`)); state.products.forEach(p=> productSel.insertAdjacentHTML('beforeend', `<option value="${p.id}">${p.name} — ${p.code} — ${p.price}</option>`)); }
+function uid(prefix='X'){ return prefix + Math.random().toString(36).slice(2,9).toUpperCase(); }
+
+// clear storage button
+document.getElementById('clearStorage').addEventListener('click', ()=>{
+  if(confirm('آیا می‌خواهید تمام داده‌های ذخیره‌شده پاک شوند؟')){
+    localStorage.removeItem('products'); localStorage.removeItem('customers'); localStorage.removeItem('invoices'); localStorage.removeItem('mk_notes');
+    state = {products:[], customers:[], invoices:[], notes:''};
+    refreshAll(); alert('داده‌ها پاک شدند');
+  }
+});
+
+// init
+saveState(); refreshAll();
+</script>
 </body>
 </html>
